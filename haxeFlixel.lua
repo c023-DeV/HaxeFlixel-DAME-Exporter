@@ -176,11 +176,11 @@ if exportOnlyCSV == false then
 	
 	baseFileText = baseFileText..tab1.."{\n"
 	baseFileText = baseFileText..tab2.."// The masterLayer contains every single object in this group making it easy to empty the level.\n"
-	baseFileText = baseFileText..tab2.."public var masterLayer:FlxGroup = new FlxGroup;\n\n"
+	baseFileText = baseFileText..tab2.."public var masterLayer:FlxGroup;\n\n"
 	baseFileText = baseFileText..tab2.."// This group contains all the tilemaps specified to use collisions.\n"
-	baseFileText = baseFileText..tab2.."public var hitTilemaps:FlxGroup = new FlxGroup;\n"
+	baseFileText = baseFileText..tab2.."public var hitTilemaps:FlxGroup;\n"
 	baseFileText = baseFileText..tab2.."// This group contains all the tilemaps.\n"
-	baseFileText = baseFileText..tab2.."public var tilemaps:FlxGroup = new FlxGroup;\n\n"
+	baseFileText = baseFileText..tab2.."public var tilemaps:FlxGroup;\n\n"
 	baseFileText = baseFileText..tab2.."public var boundsMinX:Int;\n"
 	baseFileText = baseFileText..tab2.."public var boundsMinY:Int;\n"
 	baseFileText = baseFileText..tab2.."public var boundsMaxX:Int;\n"
@@ -196,6 +196,9 @@ if exportOnlyCSV == false then
 	
 	baseFileText = baseFileText..tab1.."public function new()\n"
 	baseFileText = baseFileText..tab1.."{\n"
+	baseFileText = baseFileText..tab2.."masterLayer = new FlxGroup();\n"
+	baseFileText = baseFileText..tab2.."hitTilemaps = new FlxGroup();\n"
+	baseFileText = baseFileText..tab2.."tilemaps = new FlxGroup();\n"
 	baseFileText = baseFileText..tab2.."paths = new Array<Dynamic>();\n"
 	baseFileText = baseFileText..tab2.."shapes = new Array<Dynamic>();\n"
 	baseFileText = baseFileText..tab2.."linkedObjectDictionary = new Array<Dynamic>();\n"
@@ -499,7 +502,7 @@ for groupIndex = 0,groupCount do
 		if # spriteLayers > 0 then
 			fileText = fileText..tab2.."//Sprites\n"
 			for i,v in ipairs(spriteLayers) do
-				fileText = fileText..tab2..spriteLayers[i][3].."Group = new LayerGroup();\n"
+				fileText = fileText..tab2..spriteLayers[i][3].."Group = new FlxGroup();\n"
 			end
 			fileText = fileText.."\n"
 		end
@@ -507,7 +510,7 @@ for groupIndex = 0,groupCount do
 		if # shapeLayers > 0 then
 			fileText = fileText..tab1.."//Shapes\n"
 			for i,v in ipairs(shapeLayers) do
-				fileText = fileText..tab2..shapeLayers[i][3].."Group= new LayerGroup();\n"
+				fileText = fileText..tab2..shapeLayers[i][3].."Group= new FlxGroup();\n"
 			end
 			fileText = fileText.."\n"
 		end
@@ -515,7 +518,7 @@ for groupIndex = 0,groupCount do
 		if # pathLayers > 0 then
 			fileText = fileText..tab2.."//Paths\n"
 			for i,v in ipairs(pathLayers) do
-				fileText = fileText..tab2..pathLayers[i][3].."Group = new LayerGroup();\n"
+				fileText = fileText..tab2..pathLayers[i][3].."Group = new FlxGroup();\n"
 			end
 			fileText = fileText.."\n"
 		end
