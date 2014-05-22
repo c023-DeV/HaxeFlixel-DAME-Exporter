@@ -208,10 +208,10 @@ if exportOnlyCSV == false then
 	baseFileText = baseFileText..tab2.."// Expects callback function to be callback(newobj:Dynamic,layer:FlxGroup,level:BaseLevel,properties:Array)\n"
 	baseFileText = baseFileText..tab2.."public function createObjects(onAddCallback:Dynamic = null, parentObject:Dynamic = null):Void { }\n\n"
 	
-	baseFileText = baseFileText..tab2.."public function addTilemap( mapClass:Class, imageClass:Class, xpos:Float, ypos:Float, tileWidth:UInt, tileHeight:UInt, scrollX:Float, scrollY:Float, hits:Bool, collideIdx:UInt, drawIdx:UInt, properties:Array, onAddCallback:Dynamic = null ):"..tileMapClass.."\n"
+	baseFileText = baseFileText..tab2.."public function addTilemap( mapClass:Dynamic, imageClass:Class<Dynamic>, xpos:Float, ypos:Float, tileWidth:UInt, tileHeight:UInt, scrollX:Float, scrollY:Float, hits:Bool, collideIdx:UInt, drawIdx:UInt, properties:Array<Dynamic>, onAddCallback:Dynamic = null ):"..tileMapClass.."\n"
 	baseFileText = baseFileText..tab2.."{\n"
-	baseFileText = baseFileText..tab3.."var map:"..tileMapClass.." = new "..tileMapClass..";\n"
-	baseFileText = baseFileText..tab3.."map.loadMap( new mapClass, imageClass, tileWidth, tileHeight, FlxTilemap.OFF, 0, drawIdx, collideIdx);\n"
+	baseFileText = baseFileText..tab3.."var map:"..tileMapClass.." = new "..tileMapClass.."();\n"
+	baseFileText = baseFileText..tab3.."map.loadMap( mapClass, imageClass, tileWidth, tileHeight, FlxTilemap.OFF, 0, drawIdx, collideIdx);\n"
 	
 	baseFileText = baseFileText..tab3.."map.x = xpos;\n"
 	baseFileText = baseFileText..tab3.."map.y = ypos;\n"
@@ -221,11 +221,11 @@ if exportOnlyCSV == false then
 	baseFileText = baseFileText..tab4.."hitTilemaps.add(map);\n"
 	baseFileText = baseFileText..tab3.."tilemaps.add(map);\n"
 	baseFileText = baseFileText..tab3.."if(onAddCallback != null)\n"
-	baseFileText = baseFileText..tab4.."onAddCallback(map, null, this, scrollX, scrollY, properties);\n"
+	baseFileText = baseFileText..tab4.."onAddCallback(map, null, properties);\n"
 	
 	baseFileText = baseFileText..tab3.."return map;\n"
 	baseFileText = baseFileText..tab2.."}\n\n"
-	baseFileText = baseFileText..tab2.."public function addSpriteToLayer(obj:FlxSprite, type:Dynamic, layer:FlxGroup, xpos:Float, ypos:Float, angle:Float, scrollX:Float, scrollY:Float, flipped:Bool = false, scaleX:Float = 1, scaleY:Float = 1, properties:Array = null, onAddCallback:Dynamic = null):FlxSprite\n"
+	baseFileText = baseFileText..tab2.."public function addSpriteToLayer(obj:FlxSprite, type:Dynamic, layer:FlxGroup, xpos:Float, ypos:Float, angle:Float, scrollX:Float, scrollY:Float, flipped:Bool = false, scaleX:Float = 1, scaleY:Float = 1, properties:Array<Dynamic> = null, onAddCallback:Dynamic = null):FlxSprite\n"
 	
 	baseFileText = baseFileText..tab1.."{\n"
 	baseFileText = baseFileText..tab2.."if( obj == null ) {\n"
@@ -280,7 +280,7 @@ if exportOnlyCSV == false then
 	baseFileText = baseFileText..tab3.."if(onAddCallback != null)\n"
 	baseFileText = baseFileText..tab3.."{\n"
 	
-		baseFileText = baseFileText..tab4.."var newData:Dynamic = onAddCallback(data, layer, this, scrollX, scrollY, properties);\n"
+		baseFileText = baseFileText..tab4.."var newData:Dynamic = onAddCallback(data, layer, this, properties);\n"
 	
 	baseFileText = baseFileText..tab4.."if( newData != null )\n"
 	baseFileText = baseFileText..tab5.."data = newData;\n"
@@ -309,7 +309,7 @@ if exportOnlyCSV == false then
 	baseFileText = baseFileText..tab1.."}\n\n"
 
 	
-	baseFileText = baseFileText..tab2.."public function createLink( objectFrom:Dynamic, target:Dynamic, onAddCallback:Dynamic, properties:Array ):Void\n"
+	baseFileText = baseFileText..tab2.."public function createLink( objectFrom:Dynamic, target:Dynamic, onAddCallback:Dynamic, properties:Array<Dynamic> ):Void\n"
 	baseFileText = baseFileText..tab2.."{\n"
 	baseFileText = baseFileText..tab3.."var link:ObjectLink = new ObjectLink( objectFrom, target );\n"
 	
@@ -380,7 +380,7 @@ for groupIndex = 0,groupCount do
 	fileText = "//Code generated with DAME and DeVZoO. http://www.dambots.com http://www.dev-zoo.net\n\n"
 	fileText = fileText.."package; "..GamePackage.."\n"
 	
-	
+	fileText = fileText..tab1.."import "..flixelPackage..".FlxG;\n"
 	fileText = fileText..tab1.."import "..flixelPackage..".group.FlxGroup;\n"
 	fileText = fileText..tab1.."import "..flixelPackage..".FlxSprite;\n"
 	fileText = fileText..tab1.."import "..flixelPackage..".FlxObject;\n"
@@ -497,7 +497,7 @@ for groupIndex = 0,groupCount do
 		fileText = fileText..tab2.."{\n"
 		fileText = fileText..tab2.."super();\n"
 		fileText = fileText..tab2.."var mapString:String;\n"
-		fileText = fileText..tab2.."var image:BitmapData;\n"
+		fileText = fileText..tab2.."var image:Dynamic;\n"
 
 		if # spriteLayers > 0 then
 			fileText = fileText..tab2.."//Sprites\n"
@@ -553,8 +553,8 @@ for groupIndex = 0,groupCount do
 			
 			mapPath = "'"..as3.tolua(DAME.GetRelativePath(compiledir, csvDir.."/mapCSV_"..groupName.."_"..layerName..".csv")).."'"	--Get the name to the csv
 			imagePath = "'"..as3.tolua(DAME.GetRelativePath(compiledir, layer.imageFile))								--Get the image for the layer
-			fileText = fileText..tab2.."mapString = ApplicationMain.getAsset("..mapPath..").toString();\n"
-			fileText = fileText..tab2.."image = ApplicationMain.getAsset("..imagePath.."');\n"
+			fileText = fileText..tab2.."mapString = ("..mapPath..").toString();\n"
+			fileText = fileText..tab2.."image = ("..imagePath.."').toString();\n"
 			fileText = fileText..tab2.."properties = "..as3.tolua(DAME.GetTextForProperties( propertiesString, layer.properties ))..";\n"
 			fileText = fileText..tab2.."layer"..layerName.." = addTilemap(mapString ,image, "..string.format("%.3f",x)..", "..string.format("%.3f",y)..", "..as3.tolua(layer.map.tileWidth)..", "..as3.tolua(layer.map.tileHeight)..", "..string.format("%.3f",xscroll)..", "..string.format("%.3f",yscroll)..", "..hasHitsString..", "..as3.tolua(layer.map.collideIndex)..", "..as3.tolua(layer.map.drawIndex)..", properties, onAddCallback );\n\n"
 
@@ -674,52 +674,7 @@ end
 
 if exportOnlyCSV == false then
 	
-baseFileText = baseFileText..tab1.."/**\n"
-	baseFileText = baseFileText..tab1.." * Example function to show one way to use the properties that is set in dame. \n"
-	baseFileText = baseFileText..tab1.." * Pass it in as the onAddCallback argument when creating a new level.\n"
-	baseFileText = baseFileText..tab1.." * This example uses reflection to set the fields in the object, or if field is a Property, calls set instead\n"
-	baseFileText = baseFileText..tab1.." * OBS! This is an example and will only work if the set function is in the format 'setValue' (Note the uppercase letter in Value)\n"
-	baseFileText = baseFileText..tab1.." * @param	data	The object that the properties belong to\n"
-	baseFileText = baseFileText..tab1.." * @param	layer	\n"
-	baseFileText = baseFileText..tab1.." * @param	baseLevel	\n"
-	baseFileText = baseFileText..tab1.." * @param	properties	The array of properties\n"
-	baseFileText = baseFileText..tab1.." */\n"
-	baseFileText = baseFileText..tab1.."static public function basicOnAddCallback(data:Dynamic, layer:LayerGroup, baseLevel:baseClassName, properties:Array<Dynamic>):Dynamic \n"
-	baseFileText = baseFileText..tab1.."{\n"
-	baseFileText = baseFileText..tab1.."	if (Std.is(data,"..GamePackage..".ObjectLink))\n"
-	baseFileText = baseFileText..tab1.."	{\n"
-	baseFileText = baseFileText..tab1.."		data.fromObject.linkedObject = data.toObject;\n"
-	baseFileText = baseFileText..tab1.."	}\n"
-	baseFileText = baseFileText..tab1.."	\n"
-	baseFileText = baseFileText..tab1.."	if (Std.is(data, ShapeData))\n"
-	baseFileText = baseFileText..tab1.."	{\n"
-	baseFileText = baseFileText..tab1.."		for (prop in properties) \n"
-	baseFileText = baseFileText..tab1.."		{\n"
-	baseFileText = baseFileText..tab1.."			if (prop != null)\n"
-	baseFileText = baseFileText..tab1.."			{\n"
-	baseFileText = baseFileText..tab1.."				if (Reflect.hasField(data, prop.name))\n"
-	baseFileText = baseFileText..tab1.."				{\n"
-	baseFileText = baseFileText..tab1.."					var setter = 'set' + prop.name.charAt(0).toUpperCase() + prop.name.substr(1, prop.name.length - 1);\n"
-	baseFileText = baseFileText..tab1.."					if (Reflect.hasField(data, setter))\n"
-	baseFileText = baseFileText..tab1.."					{\n"
-	baseFileText = baseFileText..tab1.."						Reflect.callMethod(data, Reflect.field(data, setter), [prop.value]);\n"
-	baseFileText = baseFileText..tab1.."					}\n"
-	baseFileText = baseFileText..tab1.."					else \n"
-	baseFileText = baseFileText..tab1.."					{\n"
-	baseFileText = baseFileText..tab1.."						Reflect.setField(data, prop.name, prop.value);\n"
-	baseFileText = baseFileText..tab1.."					}\n"
-	baseFileText = baseFileText..tab1.."				}\n"
-	baseFileText = baseFileText..tab1.."				else \n"
-	baseFileText = baseFileText..tab1.."				{\n"
-	baseFileText = baseFileText..tab1.."					if (prop.name == '') prop.name = '< Empty string >';\n"
-	baseFileText = baseFileText..tab1.."					trace('Field: < ' + prop.name + ' > does not exist for: ' +' \\n' +\n"
-	baseFileText = baseFileText..tab1.."					  	data.toString() +  ' At pos: (' + data.x + ', ' + data.y + ')');\n"
-	baseFileText = baseFileText..tab1.."				}\n"
-	baseFileText = baseFileText..tab1.."			}\n"
-	baseFileText = baseFileText..tab1.."		}\n"
-	baseFileText = baseFileText..tab1.."	}\n"
-	baseFileText = baseFileText..tab1.."	return data;\n"
-	baseFileText = baseFileText..tab1.."}\n"
+
 
 	baseFileText = baseFileText..tab1.."}\n"	-- end class
 	--end package
