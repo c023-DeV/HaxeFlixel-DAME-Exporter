@@ -229,7 +229,7 @@ if exportOnlyCSV == false then
 	
 	baseFileText = baseFileText..tab1.."{\n"
 	baseFileText = baseFileText..tab2.."if( obj == null ) {\n"
-	baseFileText = baseFileText..tab3.."obj = Type.createInstance(type, []);\n"
+	baseFileText = baseFileText..tab3.."obj = Type.createInstance(type, [xpos,ypos]);\n"
 	baseFileText = baseFileText..tab2.."}\n"
 	baseFileText = baseFileText..tab3.."obj.x += obj.offset.x;\n"
 	baseFileText = baseFileText..tab3.."obj.y += obj.offset.y;\n"
