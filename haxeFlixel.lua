@@ -220,8 +220,8 @@ if exportOnlyCSV == false then
 	baseFileText = baseFileText..tab3.."if ( hits )\n"
 	baseFileText = baseFileText..tab4.."hitTilemaps.add(map);\n"
 	baseFileText = baseFileText..tab3.."tilemaps.add(map);\n"
-	baseFileText = baseFileText..tab3.."if(onAddCallback != null)\n"
-	baseFileText = baseFileText..tab4.."onAddCallback(map, null, properties);\n"
+	baseFileText = baseFileText..tab3.."//if(onAddCallback != null)\n"
+	baseFileText = baseFileText..tab4.."//onAddCallback(map, null, properties);\n"
 	
 	baseFileText = baseFileText..tab3.."return map;\n"
 	baseFileText = baseFileText..tab2.."}\n\n"
@@ -381,12 +381,14 @@ for groupIndex = 0,groupCount do
 	fileText = fileText.."package; "..GamePackage.."\n"
 	
 	fileText = fileText..tab1.."import "..flixelPackage..".FlxG;\n"
+	
 	fileText = fileText..tab1.."import "..flixelPackage..".group.FlxGroup;\n"
 	fileText = fileText..tab1.."import "..flixelPackage..".FlxSprite;\n"
 	fileText = fileText..tab1.."import "..flixelPackage..".FlxObject;\n"
 	fileText = fileText..tab1.."import "..flixelPackage..".text.FlxText;\n"
     fileText = fileText..tab1.."import "..flixelPackage..".util.FlxPoint;\n"
     fileText = fileText..tab1.."import "..flixelPackage..".tile.FlxTilemap;\n"
+	fileText = fileText..tab1.."import openfl.Assets;\n"
 	fileText = fileText..tab1.."import flash.utils.Dictionary;\n"
 	
 	if # importsText > 0 then
@@ -439,8 +441,8 @@ for groupIndex = 0,groupCount do
 			if addGroup == true then
 				masterLayerAddText = masterLayerAddText..tab3.."masterLayer.add("..layerName.."Group);\n"
 				
-					masterLayerAddText = masterLayerAddText..tab3..layerName.."Group.scrollFactor.x = "..string.format("%.4f",as3.tolua(layer.xScroll))..";\n"
-					masterLayerAddText = masterLayerAddText..tab3..layerName.."Group.scrollFactor.y = "..string.format("%.4f",as3.tolua(layer.yScroll))..";\n"
+					--masterLayerAddText = masterLayerAddText..tab3..layerName.."Group.scrollFactor.x = "..string.format("%.4f",as3.tolua(layer.xScroll))..";\n"
+					--masterLayerAddText = masterLayerAddText..tab3..layerName.."Group.scrollFactor.y = "..string.format("%.4f",as3.tolua(layer.yScroll))..";\n"
 				
 			end
 		end
@@ -554,9 +556,9 @@ for groupIndex = 0,groupCount do
 			mapPath = "'"..as3.tolua(DAME.GetRelativePath(compiledir, csvDir.."/mapCSV_"..groupName.."_"..layerName..".csv")).."'"	--Get the name to the csv
 			imagePath = "'"..as3.tolua(DAME.GetRelativePath(compiledir, layer.imageFile))								--Get the image for the layer
 			fileText = fileText..tab2.."mapString = ("..mapPath..").toString();\n"
-			fileText = fileText..tab2.."image = ("..imagePath.."').toString();\n"
+			fileText = fileText..tab2.."image = ("..imagePath.."');\n"
 			fileText = fileText..tab2.."properties = "..as3.tolua(DAME.GetTextForProperties( propertiesString, layer.properties ))..";\n"
-			fileText = fileText..tab2.."layer"..layerName.." = addTilemap(mapString ,image, "..string.format("%.3f",x)..", "..string.format("%.3f",y)..", "..as3.tolua(layer.map.tileWidth)..", "..as3.tolua(layer.map.tileHeight)..", "..string.format("%.3f",xscroll)..", "..string.format("%.3f",yscroll)..", "..hasHitsString..", "..as3.tolua(layer.map.collideIndex)..", "..as3.tolua(layer.map.drawIndex)..", properties, onAddCallback );\n\n"
+			fileText = fileText..tab2.."layer"..layerName.." = addTilemap(Assets.getText(mapString) ,image, "..string.format("%.3f",x)..", "..string.format("%.3f",y)..", "..as3.tolua(layer.map.tileWidth)..", "..as3.tolua(layer.map.tileHeight)..", "..string.format("%.3f",xscroll)..", "..string.format("%.3f",yscroll)..", "..hasHitsString..", "..as3.tolua(layer.map.collideIndex)..", "..as3.tolua(layer.map.drawIndex)..", properties, onAddCallback );\n\n"
 
 			--fileText = fileText..tab3.."properties = "..as3.tolua(DAME.GetTextForProperties( propertiesString, layer.properties ))..";\n"
 			--tileData = as3.tolua(DAME.CreateTileDataText( layer, tilePropertiesString, "", ""))
@@ -863,12 +865,12 @@ if exportOnlyCSV == false then
 		textfile = textfile..tab2.."public var angle:Float;\n"
 		textfile = textfile..tab2.."public var width:UInt;\n"
 		textfile = textfile..tab2.."public var height:UInt;\n\n"
-		textfile = textfile..tab2.."public function new( X:Float, Y:Float, Angle:Float, Width:UInt, Height:UInt, Group:FlxGroup ) \n"
+		textfile = textfile..tab2.."public function new( X:Float, Y:Float, Angle:Float, Width:Float, Height:Float, Group:FlxGroup ) \n"
 		textfile = textfile..tab2.."{\n"
 		textfile = textfile..tab3.."super(X, Y, Group);\n"
 		textfile = textfile..tab3.."angle = Angle;\n"
-		textfile = textfile..tab3.."width = Width;\n"
-		textfile = textfile..tab3.."height = Height;\n"
+		textfile = textfile..tab3.."width = Std.int(Width); //rounding Float to Int\n"
+		textfile = textfile..tab3.."height = Std.int(Height); //rounding Float to Int\n"
 		textfile = textfile..tab2.."}\n"
 		textfile = textfile..tab1.."}\n"
 		
